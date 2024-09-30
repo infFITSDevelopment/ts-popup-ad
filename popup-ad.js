@@ -1,4 +1,4 @@
-;(function ($) {
+(function ($) {
   // 動態添加 Google 字體連結
   var googleFontLink = document.createElement("link");
   googleFontLink.rel = "preconnect";
@@ -24,14 +24,15 @@
   bootstrapScript.crossorigin = "anonymous";
   document.head.appendChild(bootstrapScript);
 
-  // 動態添加 Bootstrap scoped CSS
-  var bootstrapScopedStyle = document.createElement("style");
-  bootstrapScopedStyle.id = -"popup-ad-bootstrap-scoped";
-  document.head.appendChild(bootstrapScopedStyle);
-  // 動態添加自定 CSS
-  var customCSS = document.createElement("style");
-  customCSS.type = "text/css";
-  customCSS.innerHTML = `:root {
+  bootstrapScript.onload = function () {
+    // 動態添加 Bootstrap scoped CSS
+    var bootstrapScopedStyle = document.createElement("style");
+    bootstrapScopedStyle.id = -"popup-ad-bootstrap-scoped";
+    document.head.appendChild(bootstrapScopedStyle);
+    // 動態添加自定 CSS
+    var customCSS = document.createElement("style");
+    customCSS.type = "text/css";
+    customCSS.innerHTML = `:root {
   --dark-yellow: rgba(59, 59, 50, 1);
   --dark-yellow-14: rgba(59, 59, 50, 0.14);
   --ideal-outline-18: rgba(59, 59, 50, 0.18);
@@ -395,10 +396,10 @@
   }
 }
   `;
-  document.head.appendChild(customCSS);
+    document.head.appendChild(customCSS);
 
-  // 添加 html template
-  var panelTemplate = `
+    // 添加 html template
+    var panelTemplate = `
          <div
           class="offcanvas offcanvas-bottom"
           data-bs-scroll="true"
@@ -431,76 +432,76 @@
         </div>
         <div class="custom-blur-backdrop"></div>
   `;
-  document.body.insertAdjacentHTML("beforeend", panelTemplate);
-  var Brand = "TDA";
-  var tags_chosen = {
-    彈性: [
-      {
-        Description: "example",
-        Imgsrc: "https://example.com/imageB1.png",
-        Name: "example",
-        Tag: "1721875900838",
-        TagGroup: "彈性",
-      },
-    ],
-    場合: [
-      {
-        Description: "example",
-        Imgsrc: "https://example.com/imageB1.png",
-        Name: "example",
-        Tag: "1721875746070",
-        TagGroup: "場合",
-      },
-    ],
-    材質: [
-      {
-        Description: "example",
-        Imgsrc: "https://example.com/imageB1.png",
-        Name: "example",
-        Tag: "1721875867435",
-        TagGroup: "材質",
-      },
-    ],
-  };
-  // 定義每個標籤對應的圖片
-  const tagImages = {
-    彈性: [],
-    材質: [],
-    場合: [],
-  };
-  let selectedTag = "彈性"; // 這裏可以根據實際選擇動態設置
+    document.body.insertAdjacentHTML("beforeend", panelTemplate);
+    var Brand = "TDA";
+    var tags_chosen = {
+      彈性: [
+        {
+          Description: "example",
+          Imgsrc: "https://example.com/imageB1.png",
+          Name: "example",
+          Tag: "1721875900838",
+          TagGroup: "彈性",
+        },
+      ],
+      場合: [
+        {
+          Description: "example",
+          Imgsrc: "https://example.com/imageB1.png",
+          Name: "example",
+          Tag: "1721875746070",
+          TagGroup: "場合",
+        },
+      ],
+      材質: [
+        {
+          Description: "example",
+          Imgsrc: "https://example.com/imageB1.png",
+          Name: "example",
+          Tag: "1721875867435",
+          TagGroup: "材質",
+        },
+      ],
+    };
+    // 定義每個標籤對應的圖片
+    const tagImages = {
+      彈性: [],
+      材質: [],
+      場合: [],
+    };
+    let selectedTag = "彈性"; // 這裏可以根據實際選擇動態設置
 
-  const breakpoint = 767;
-  $(function () {
-    console.log("DOM is ready");
+    const breakpoint = 767;
+    $(function () {
+      console.log("DOM is ready");
 
-    // Fetch the Bootstrap CSS from CDN
-    fetch(
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    )
-      .then((response) => response.text())
-      .then((css) => {
-        // Scope the Bootstrap CSS to only work under .custom-scope class
-        const scopedCSS = css.replace(
-          /(^|\})\s*([^{]+)\s*\{/g,
-          function (match, p1, p2) {
-            // Ignore keyframes and other special rules
-            if (p2.startsWith("@") || p2.startsWith(":root")) {
-              return match;
+      // Fetch the Bootstrap CSS from CDN
+      fetch(
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      )
+        .then((response) => response.text())
+        .then((css) => {
+          // Scope the Bootstrap CSS to only work under .custom-scope class
+          const scopedCSS = css.replace(
+            /(^|\})\s*([^{]+)\s*\{/g,
+            function (match, p1, p2) {
+              // Ignore keyframes and other special rules
+              if (p2.startsWith("@") || p2.startsWith(":root")) {
+                return match;
+              }
+              return p1 + "#pop-ad-container " + p2 + " {";
             }
-            return p1 + "#pop-ad-container " + p2 + " {";
-          }
-        );
+          );
 
-        // Inject the scoped CSS into the page
-        document.getElementById(-"popup-ad-bootstrap-scoped").textContent =
-          scopedCSS;
-      });
-  });
+          // Inject the scoped CSS into the page
+          document.getElementById(-"popup-ad-bootstrap-scoped").textContent =
+            scopedCSS;
+        });
+    });
     // 監聽窗口大小變化
     window.addEventListener("resize", function () {
       handleWindowResize();
-      handleAdjustAspectRatio()
+      handleAdjustAspectRatio();
     });
 
     window.addEventListener("beforeunload", function () {
@@ -521,129 +522,133 @@
       // do something...
       $(".custom-blur-backdrop").hide();
     });
-  
-  function handleAdjustAspectRatio() {
-    const aspectBoxes = $('#pop-ad-container .offcanvas-body #pop-ad-img-container > .pop-item');
 
-    aspectBoxes.each(function() {
-      handleAspectRatio(this, 1); // `this` 代表当前 DOM 元素
-    });
-  }
+    function handleAdjustAspectRatio() {
+      const aspectBoxes = $(
+        "#pop-ad-container .offcanvas-body #pop-ad-img-container > .pop-item"
+      );
 
-  function handleAspectRatio(element, ratio) {
-    const width = element.offsetWidth;
-    element.style.height = width / ratio + "px";
-  }
-
-  function handleWindowResize() {
-    // 取得當前視窗寬度
-    const windowWidth = window.innerWidth;
-    const popAdContainer = document.getElementById("pop-ad-container");
-
-    // 當視窗寬度大於等於 767px (桌面版)
-    if (windowWidth >= breakpoint) {
-      popAdContainer.setAttribute("data-bs-scroll", "true");
-    } else {
-      popAdContainer.setAttribute("data-bs-scroll", "false");
-    }
-  }
-
-  function getPopAd() {
-    let options = {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        Brand: Brand,
-        Tags: tags_chosen,
-        NUM: 18,
-      }),
-    };
-    console.log("tags chosen:", tags_chosen);
-    fetch(
-      "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        let jsonData = response.Item;
-        // 填充每個標籤對應的圖片
-        jsonData.forEach((item) => {
-          for (const tag in item.Tags) {
-            if (item.TagsInclude.includes(tag)) {
-              tagImages[tag].push({
-                src: item.Imgsrc,
-                alt: item.ItemName,
-                price: item.price,
-                link: item.Link,
-              });
-            }
-          }
-        });
-        // 初始加載 "彈性" 標籤的圖片
-        updatePopAd(tagImages["彈性"]);
-      })
-      //將 response.Item 的內容更新成頁面中的商品推薦版位
-      .catch((err) => {
-        console.error(err);
+      aspectBoxes.each(function () {
+        handleAspectRatio(this, 1); // `this` 代表当前 DOM 元素
       });
-  }
+    }
 
-  // 更新pop ad圖片的函數
-  function updatePopAd(images) {
-    const fakeData = [
-      {
-        alt: "秋季新品\n限時優惠中",
-        price: "",
-        original_price: "2024/9/5 至 9/10",
-        src: "",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-      {
-        alt: "鱷魚皮革磚色背包",
-        price: "NT$ 3,990",
-        original_price: "NT$ 4,990",
-        src: "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-      {
-        alt: "時尚米白風衣外套",
-        price: "NT$ 7,990",
-        original_price: "NT$ 8,990",
-        src: "https://images.unsplash.com/photo-1712570193685-1fb1bddfafda?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-      {
-        alt: "純白西裝套裝",
-        price: "NT$ 6,490",
-        original_price: "8,888",
-        src: "https://images.unsplash.com/photo-1583686543381-2608547b3963?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-      {
-        alt: "簡約午夜黑背心",
-        price: "NT$ 1,890",
-        original_price: "NT$ 2,890",
-        src: "https://images.unsplash.com/photo-1551833726-b6549cd73566?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-      {
-        alt: "莫蘭迪藍西裝套裝",
-        price: "",
-        original_price: "NT$ 6,990",
-        src: "https://images.unsplash.com/photo-1561357747-a5ebd644c2d6?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
-      },
-    ];
-    const items = fakeData
-      .map(
-        (img) =>
-          `
-  <div class="pop-item"  onclick="window.open('${img.link}')" style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.24) 100%), url(${
-    img.src
-  }) lightgray 50% / cover no-repeat;">
+    function handleAspectRatio(element, ratio) {
+      const width = element.offsetWidth;
+      element.style.height = width / ratio + "px";
+    }
+
+    function handleWindowResize() {
+      // 取得當前視窗寬度
+      const windowWidth = window.innerWidth;
+      const popAdContainer = document.getElementById("pop-ad-container");
+
+      // 當視窗寬度大於等於 767px (桌面版)
+      if (windowWidth >= breakpoint) {
+        popAdContainer.setAttribute("data-bs-scroll", "true");
+      } else {
+        popAdContainer.setAttribute("data-bs-scroll", "false");
+      }
+    }
+
+    function getPopAd() {
+      let options = {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          Brand: Brand,
+          Tags: tags_chosen,
+          NUM: 18,
+        }),
+      };
+      console.log("tags chosen:", tags_chosen);
+      fetch(
+        "https://ldiusfc4ib.execute-api.ap-northeast-1.amazonaws.com/v0/extension/recom_product",
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          let jsonData = response.Item;
+          // 填充每個標籤對應的圖片
+          jsonData.forEach((item) => {
+            for (const tag in item.Tags) {
+              if (item.TagsInclude.includes(tag)) {
+                tagImages[tag].push({
+                  src: item.Imgsrc,
+                  alt: item.ItemName,
+                  price: item.price,
+                  link: item.Link,
+                });
+              }
+            }
+          });
+          // 初始加載 "彈性" 標籤的圖片
+          updatePopAd(tagImages["彈性"]);
+        })
+        //將 response.Item 的內容更新成頁面中的商品推薦版位
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    // 更新pop ad圖片的函數
+    function updatePopAd(images) {
+      const fakeData = [
+        {
+          alt: "秋季新品\n限時優惠中",
+          price: "",
+          original_price: "2024/9/5 至 9/10",
+          src: "",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+        {
+          alt: "鱷魚皮革磚色背包",
+          price: "NT$ 3,990",
+          original_price: "NT$ 4,990",
+          src: "https://images.unsplash.com/photo-1594633313593-bab3825d0caf?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+        {
+          alt: "時尚米白風衣外套",
+          price: "NT$ 7,990",
+          original_price: "NT$ 8,990",
+          src: "https://images.unsplash.com/photo-1712570193685-1fb1bddfafda?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+        {
+          alt: "純白西裝套裝",
+          price: "NT$ 6,490",
+          original_price: "8,888",
+          src: "https://images.unsplash.com/photo-1583686543381-2608547b3963?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+        {
+          alt: "簡約午夜黑背心",
+          price: "NT$ 1,890",
+          original_price: "NT$ 2,890",
+          src: "https://images.unsplash.com/photo-1551833726-b6549cd73566?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+        {
+          alt: "莫蘭迪藍西裝套裝",
+          price: "",
+          original_price: "NT$ 6,990",
+          src: "https://images.unsplash.com/photo-1561357747-a5ebd644c2d6?q=80&w=300&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          link: "https://www.tendamotor.com/products/mt-60%E2%84%A2-rs",
+        },
+      ];
+      const items = fakeData
+        .map(
+          (img) =>
+            `
+  <div class="pop-item"  onclick="window.open('${
+    img.link
+  }')" style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.24) 100%), url(${
+              img.src
+            }) lightgray 50% / cover no-repeat;">
      <div class="pop-item-info" style="width: 100%;"
      >
        <div class="pop-item-bg">
@@ -661,9 +666,10 @@
      </div>
   </div>
         `
-      )
-      .join("");
-    $("#pop-ad-img-container").html(items);
-    handleAdjustAspectRatio()
-  }
+        )
+        .join("");
+      $("#pop-ad-img-container").html(items);
+      handleAdjustAspectRatio();
+    }
+  };
 })(jQuery);
