@@ -1,4 +1,4 @@
-(function ($) {
+;(function ($) {
   // 動態添加 Google 字體連結
   var googleFontLink = document.createElement("link");
   googleFontLink.rel = "preconnect";
@@ -474,6 +474,29 @@
   $(function () {
     console.log("DOM is ready");
 
+    // Fetch the Bootstrap CSS from CDN
+    fetch(
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    )
+      .then((response) => response.text())
+      .then((css) => {
+        // Scope the Bootstrap CSS to only work under .custom-scope class
+        const scopedCSS = css.replace(
+          /(^|\})\s*([^{]+)\s*\{/g,
+          function (match, p1, p2) {
+            // Ignore keyframes and other special rules
+            if (p2.startsWith("@") || p2.startsWith(":root")) {
+              return match;
+            }
+            return p1 + "#pop-ad-container " + p2 + " {";
+          }
+        );
+
+        // Inject the scoped CSS into the page
+        document.getElementById(-"popup-ad-bootstrap-scoped").textContent =
+          scopedCSS;
+      });
+  });
     // 監聽窗口大小變化
     window.addEventListener("resize", function () {
       handleWindowResize();
@@ -498,30 +521,6 @@
       // do something...
       $(".custom-blur-backdrop").hide();
     });
-    // Fetch the Bootstrap CSS from CDN
-    fetch(
-      "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    )
-      .then((response) => response.text())
-      .then((css) => {
-        // Scope the Bootstrap CSS to only work under .custom-scope class
-        const scopedCSS = css.replace(
-          /(^|\})\s*([^{]+)\s*\{/g,
-          function (match, p1, p2) {
-            // Ignore keyframes and other special rules
-            if (p2.startsWith("@") || p2.startsWith(":root")) {
-              return match;
-            }
-            return p1 + "#pop-ad-container " + p2 + " {";
-          }
-        );
-
-        // Inject the scoped CSS into the page
-        document.getElementById(-"popup-ad-bootstrap-scoped").textContent =
-          scopedCSS;
-      });
-  });
-
   
   function handleAdjustAspectRatio() {
     const aspectBoxes = $('#pop-ad-container .offcanvas-body #pop-ad-img-container > .pop-item');
