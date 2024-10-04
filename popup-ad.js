@@ -39,6 +39,9 @@
   --super_light_yellow: rgba(243, 243, 239, 1);
   --hovered-color: rgba(232, 232, 228, 1);
 }
+#pop-ad-container:not(.show) {
+  opacity: 0;
+}
 
 #pop-ad-container p {
   margin: 0;
@@ -398,41 +401,6 @@
   `;
     document.head.appendChild(customCSS);
 
-    // 添加 html template
-    var panelTemplate = `
-         <div
-          class="offcanvas offcanvas-bottom"
-          data-bs-scroll="true"
-          data-bs-backdrop="false"
-          tabindex="-1"
-          id="pop-ad-container"
-          aria-labelledby="popAdOffcanvasBottomLabel"
-        >
-          <div class="offcanvas-header">
-            <button
-              style="background-color: #e8e8e4"
-              type="button"
-              class="btn-close text-reset"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-              id="pop-ad-icon--close"
-            ></button>
-          </div>
-          <div class="offcanvas-body small">
-            <div id="pop-ad-img-container">
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
-              <!-- pop ad 內容將由 JavaScript 動態生成 -->
-            </div>
-          </div>
-        </div>
-        <div class="custom-blur-backdrop"></div>
-  `;
-    document.body.insertAdjacentHTML("beforeend", panelTemplate);
     var Brand = "TDA";
     var tags_chosen = {
       彈性: [
@@ -498,6 +466,41 @@
             scopedCSS;
         });
     });
+    // 添加 html template
+    var panelTemplate = `
+        <div
+         class="offcanvas offcanvas-bottom"
+         data-bs-scroll="true"
+         data-bs-backdrop="false"
+         tabindex="-1"
+         id="pop-ad-container"
+         aria-labelledby="popAdOffcanvasBottomLabel"
+       >
+         <div class="offcanvas-header">
+           <button
+             style="background-color: #e8e8e4"
+             type="button"
+             class="btn-close text-reset"
+             data-bs-dismiss="offcanvas"
+             aria-label="Close"
+             id="pop-ad-icon--close"
+           ></button>
+         </div>
+         <div class="offcanvas-body small">
+           <div id="pop-ad-img-container">
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <div class="pop-item" style="box-shadow: none;border:none; background-color:#f3f3ef"></div>
+             <!-- pop ad 內容將由 JavaScript 動態生成 -->
+           </div>
+         </div>
+       </div>
+       <div class="custom-blur-backdrop"></div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", panelTemplate);
     // 監聽窗口大小變化
     window.addEventListener("resize", function () {
       handleWindowResize();
@@ -663,6 +666,7 @@
       var myOffcanvas = document.getElementById("pop-ad-container");
       var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
       $(".custom-blur-backdrop").fadeIn(300);
+
       setTimeout(function () {
         bsOffcanvas.show();
       }, 500);
