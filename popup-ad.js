@@ -512,10 +512,6 @@
     // 首次載入時執行檢查
     handleWindowResize();
     getPopAd();
-    myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
-      // do something...
-      $(".custom-blur-backdrop").hide();
-    });
 
     function handleAdjustAspectRatio() {
       const aspectBoxes = $(
@@ -581,12 +577,6 @@
           });
           // 初始加載 "彈性" 標籤的圖片
           updatePopAd(tagImages["彈性"]);
-          var myOffcanvas = document.getElementById("pop-ad-container");
-          var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
-          $(".custom-blur-backdrop").fadeIn(300);
-          setTimeout(function () {
-            bsOffcanvas.show();
-          }, 500);
         })
         //將 response.Item 的內容更新成頁面中的商品推薦版位
         .catch((err) => {
@@ -670,6 +660,16 @@
         .join("");
       $("#pop-ad-img-container").html(items);
       handleAdjustAspectRatio();
+      var myOffcanvas = document.getElementById("pop-ad-container");
+      var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas);
+      $(".custom-blur-backdrop").fadeIn(300);
+      setTimeout(function () {
+        bsOffcanvas.show();
+      }, 500);
+      myOffcanvas.addEventListener("hidden.bs.offcanvas", function () {
+        // do something...
+        $(".custom-blur-backdrop").hide();
+      });
     }
   };
 })(jQuery);
